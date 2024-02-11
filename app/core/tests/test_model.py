@@ -4,6 +4,10 @@ Test for my models
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from freezegun import freeze_time
+import datetime
+
+from core import models
 
 
 class ModelTests(TestCase):
@@ -46,3 +50,32 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    @freeze_time("2024-01-01")
+    def test_create_booking(self):
+        """Test creating a booking"""
+        user = get_user_model().objects.create_user(
+            email='Test@example.com', password='password123'
+        )
+
+        booking = models.Bookings.objects.create(
+            user=user,
+            start_time=datetime.datetime.now(),
+            notes='Test notes',
+        )
+
+        self.assertEqual(booking.booking_id, 1)
+        self.assertFalse(booking.cancelled)
+        self.assertFalse(booking.completed)
+
+    def test_create_service(self):
+        """Test creating a service"""
+        service = models.BeautyServices.objects.create(
+            name='Eyebrow Waxing',
+            cost=10.00,
+            description='Waxing of the eyebrows',
+            service_type='BROWS',
+            duration=datetime.timedelta(minutes=30),
+        )
+
+        self.assertEqual(str(service), service.name)

@@ -52,34 +52,29 @@ class Bookings(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
-    booking_starttime = models.DateTimeField(
+    start_time = models.DateTimeField(
         validators=[MinValueValidator(datetime.datetime.now())]
     )
-    booking_endtime = models.DateTimeField(
-        validators=[MinValueValidator(datetime.datetime.now())]
-    )
-    booking_duration = models.DurationField()
-    booking_duration = models.DurationField()
-    booking_notes = models.CharField(max_length=255)
+    notes = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
-    booking_cancelled = models.BooleanField(default=False)
-    booking_completed = models.BooleanField(default=False)
-    service_id = models.ForeignKey('Services', on_delete=models.CASCADE)
+    cancelled = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
+    beauty_services = models.ManyToManyField('BeautyServices')
 
 
-class Services(models.Model):
+class BeautyServices(models.Model):
     SERVICE_CHOICES = {
         "LASHES": "Lashes",
         "NAILS": "Nails",
         "BROWS": "Brows",
     }
     service_id = models.AutoField(primary_key=True)
-    service_name = models.CharField(max_length=255)
-    service_desciption = models.TextField(blank=True)
-    service_duration = models.DurationField()
-    service_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
     service_type = models.CharField(choices=SERVICE_CHOICES)
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
+    duration = models.DurationField()
 
     def __str__(self):
         """Return service name"""
-        return self.service_name
+        return self.name
