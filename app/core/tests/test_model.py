@@ -6,6 +6,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from freezegun import freeze_time
 import datetime
+from django.utils import timezone
 
 from core import models
 
@@ -58,19 +59,19 @@ class ModelTests(TestCase):
             email='Test@example.com', password='password123'
         )
 
-        booking = models.Bookings.objects.create(
+        booking = models.Booking.objects.create(
             user=user,
-            start_time=datetime.datetime.now(),
+            start_time=timezone.now(),
             notes='Test notes',
         )
 
-        self.assertEqual(booking.booking_id, 1)
+        self.assertEqual(booking.start_time, timezone.now())
         self.assertFalse(booking.cancelled)
         self.assertFalse(booking.completed)
 
     def test_create_service(self):
         """Test creating a service"""
-        service = models.BeautyServices.objects.create(
+        service = models.BeautyService.objects.create(
             name='Eyebrow Waxing',
             cost=10.00,
             description='Waxing of the eyebrows',

@@ -47,7 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
 
-class Bookings(models.Model):
+class Booking(models.Model):
     booking_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
@@ -59,10 +59,10 @@ class Bookings(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     cancelled = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
-    beauty_services = models.ManyToManyField('BeautyServices')
+    beauty_services = models.ManyToManyField('BeautyService')
 
 
-class BeautyServices(models.Model):
+class BeautyService(models.Model):
     SERVICE_CHOICES = {
         "LASHES": "Lashes",
         "NAILS": "Nails",
